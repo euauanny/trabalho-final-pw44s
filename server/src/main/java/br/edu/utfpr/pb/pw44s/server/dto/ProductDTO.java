@@ -22,5 +22,7 @@ public class ProductDTO {
     @NotNull
     private BigDecimal price;
 
+    private String urlImage;
+
     private CategoryDTO category;
 }
