@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,5 +23,9 @@ public class OrderDTO {
 
     @NotNull
     private long userId;
+
+    private List<OrderItemDTO> items;
+
+    private BigDecimal total;
 
 }
