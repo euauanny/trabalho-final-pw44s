@@ -61,14 +61,12 @@ public class OrderController extends CrudController<Order, OrderDTO, Long> {
 
     @Override
     public ResponseEntity<OrderDTO> create(OrderDTO entity) {
-        // Not used: prefer create with items via POST /orders
         long userId = getCurrentUserId();
         entity.setUserId(userId);
         entity.setDate(LocalDateTime.now());
         return super.create(entity);
     }
 
-    // New endpoint handler for creating an order with items
     @PostMapping("checkout")
     public ResponseEntity<OrderDTO> createCheckout(@RequestBody OrderCreateDTO createDTO) {
         long userId = getCurrentUserId();

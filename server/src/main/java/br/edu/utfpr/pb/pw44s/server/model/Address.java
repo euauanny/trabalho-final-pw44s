@@ -18,7 +18,6 @@ import lombok.Setter;
 public class Address {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
