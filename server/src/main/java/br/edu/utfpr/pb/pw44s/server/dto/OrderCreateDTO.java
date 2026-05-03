@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
+//quando o cliente envia os dados p cria um pedido
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

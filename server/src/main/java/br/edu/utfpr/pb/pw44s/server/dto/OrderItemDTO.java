@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-
+//cada item do pedido retornado no get orders
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
