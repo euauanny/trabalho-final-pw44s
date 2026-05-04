@@ -52,7 +52,7 @@ public class User implements UserDetails {
     private String password;
 
     @NotNull
-    @Column(length = 100)
+    @Column(length = 100, unique = true)
     private String email;
 
     @Override

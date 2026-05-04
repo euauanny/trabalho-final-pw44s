@@ -17,6 +17,11 @@ public class UserService {
     }
 
     public User save(User user) {
+        // verifica se já existe usuário com o mesmo email
+        if (this.userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalStateException("Email já cadastrado");
+        }
+
         user.setPassword( passwordEncoder.encode(user.getPassword()) );
         return this.userRepository.save(user);
     }
