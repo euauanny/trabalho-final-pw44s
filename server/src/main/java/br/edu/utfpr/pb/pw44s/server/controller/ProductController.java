@@ -8,6 +8,8 @@ import br.edu.utfpr.pb.pw44s.server.service.IProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +45,12 @@ public class ProductController extends CrudController<Product, ProductDTO, Long>
     @Override
     protected Product toEntity(ProductDTO dto) {
         return productMapper.toEntity(dto);
+    }
+
+    @GetMapping(params = "categoryId")
+    public ResponseEntity<java.util.List<ProductDTO>> findAllByCategory(@RequestParam Long categoryId) {
+        java.util.List<Product> products = productService.findByCategoryId(categoryId);
+        return ResponseEntity.ok(products.stream().map(this::toDto).collect(java.util.stream.Collectors.toList()));
     }
 
     @Override
