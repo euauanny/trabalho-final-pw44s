@@ -1,14 +1,13 @@
-import { useForm, Controller } from "react-hook-form";
+import { useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Link, useNavigate } from "react-router-dom";
-import { classNames } from "primereact/utils";
-import { useRef, useState } from "react";
-import type  { IUserRegister } from "@/commons/types";
-import AuthService from "@/services/auth-service";
 import { Toast } from "primereact/toast";
+import type { IUserRegister } from "@/commons/types";
+import AuthService from "@/services/auth-service";
 
 export const RegisterPage = () => {
   const {
@@ -16,88 +15,79 @@ export const RegisterPage = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<IUserRegister>({
-    defaultValues: { username: "", password: "", displayName: "" },
+    defaultValues: { username: "", password: "", displayName: "", email: "" },
   });
-  const { signup } = AuthService;
   const [loading, setLoading] = useState(false);
+  const { signup } = AuthService;
   const navigate = useNavigate();
   const toast = useRef<Toast>(null);
 
   const onSubmit = async (data: IUserRegister) => {
     setLoading(true);
-    try {
-      const response = await signup(data);
-      if (response.status === 200 && response.data) {
-        toast.current?.show({
-          severity: "success",
-          summary: "Sucesso",
-          detail: "Usuário cadastrado com sucesso.",
-          life: 3000,
-        });
-        setTimeout(() => {
-          navigate("/login");
-        }, 1000);
-      } else {
-        toast.current?.show({
-          severity: "error",
-          summary: "Erro",
-          detail: "Falha ao cadastrar usuário.",
-          life: 3000,
-        });
-      }
-    } catch {
+    const response = await signup(data);
+
+    if (response.success) {
+      toast.current?.show({
+        severity: "success",
+        summary: "Sucesso",
+        detail: "Usuario cadastrado.",
+        life: 2500,
+      });
+      setTimeout(() => navigate("/login"), 800);
+    } else {
       toast.current?.show({
         severity: "error",
         summary: "Erro",
-        detail: "Falha ao cadastrar usuário.",
-        life: 3000,
+        detail: "Nao foi possivel cadastrar. Verifique usuario, email e senha.",
+        life: 3500,
       });
-    } finally {
-      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="flex justify-center items-start pt-30 px-4 bg-gray-100 dark:bg-gray-900">
+    <div className="auth-page">
       <Toast ref={toast} />
-      <Card title="Registrar Conta" className="w-full max-w-md">
-        <form onSubmit={handleSubmit(onSubmit)} className="p-fluid space-y-4">
+      <Card title="Criar conta" className="auth-card">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-column gap-3">
           <div>
-            <label className="block mb-2">Nome de Exibição</label>
+            <label className="block mb-2">Nome</label>
             <Controller
               name="displayName"
               control={control}
-              rules={{ required: "Campo obrigatório" }}
+              rules={{ required: "Campo obrigatorio" }}
               render={({ field }) => (
-                <InputText
-                  {...field}
-                  className={classNames({ "p-invalid": errors.displayName })}
-                  placeholder="Ex: João das Neves"
-                />
+                <InputText {...field} className={errors.displayName ? "p-invalid w-full" : "w-full"} />
               )}
             />
-            {errors.displayName && (
-              <small className="p-error">{errors.displayName.message}</small>
-            )}
+            {errors.displayName && <small className="p-error">{errors.displayName.message}</small>}
           </div>
 
           <div>
-            <label className="block mb-2">Usuário</label>
+            <label className="block mb-2">Usuario</label>
             <Controller
               name="username"
               control={control}
-              rules={{ required: "Campo obrigatório" }}
+              rules={{ required: "Campo obrigatorio", minLength: { value: 4, message: "Minimo 4 caracteres" } }}
               render={({ field }) => (
-                <InputText
-                  {...field}
-                  className={classNames({ "p-invalid": errors.username })}
-                  placeholder="Ex: jsnow"
-                />
+                <InputText {...field} className={errors.username ? "p-invalid w-full" : "w-full"} />
               )}
             />
-            {errors.username && (
-              <small className="p-error">{errors.username.message}</small>
-            )}
+            {errors.username && <small className="p-error">{errors.username.message}</small>}
+          </div>
+
+          <div>
+            <label className="block mb-2">Email</label>
+            <Controller
+              name="email"
+              control={control}
+              rules={{ required: "Campo obrigatorio" }}
+              render={({ field }) => (
+                <InputText {...field} type="email" className={errors.email ? "p-invalid w-full" : "w-full"} />
+              )}
+            />
+            {errors.email && <small className="p-error">{errors.email.message}</small>}
           </div>
 
           <div>
@@ -106,35 +96,36 @@ export const RegisterPage = () => {
               name="password"
               control={control}
               rules={{
-                required: "Campo obrigatório",
-                minLength: { value: 6, message: "Mínimo 6 caracteres" },
+                required: "Campo obrigatorio",
+                minLength: { value: 6, message: "Minimo 6 caracteres" },
+                pattern: {
+                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/,
+                  message: "Use maiuscula, minuscula e numero",
+                },
               }}
               render={({ field }) => (
                 <Password
                   {...field}
                   toggleMask
                   feedback={false}
-                  className={classNames({ "p-invalid": errors.password })}
+                  className={errors.password ? "p-invalid w-full" : "w-full"}
+                  inputClassName="w-full"
                 />
               )}
             />
-            {errors.password && (
-              <small className="p-error">{errors.password.message}</small>
-            )}
+            {errors.password && <small className="p-error">{errors.password.message}</small>}
           </div>
+
           <Button
             type="submit"
             label="Registrar"
+            icon="pi pi-user-plus"
             loading={loading || isSubmitting}
             disabled={loading || isSubmitting}
-            className="w-full mt-3"
           />
-          <div className="text-center mt-3">
+          <div className="text-center">
             <small>
-              Já tem uma conta?{" "}
-              <Link to="/login" className="text-primary">
-                Fazer login
-              </Link>
+              Ja tem uma conta? <Link to="/login">Fazer login</Link>
             </small>
           </div>
         </form>

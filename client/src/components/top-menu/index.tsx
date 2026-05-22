@@ -1,144 +1,66 @@
-import React, { useEffect, useState } from "react";
 import { Menubar } from "primereact/menubar";
 import type { MenuItem } from "primereact/menuitem";
-import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
+import { Badge } from "primereact/badge";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/hooks/use-auth";
-import { InputSwitch } from "primereact/inputswitch";
+import { useCart } from "@/context/hooks/use-cart";
 
-const TopMenu: React.FC = () => {
+const TopMenu = () => {
   const navigate = useNavigate();
-  const user = "user@email.com";
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
-  const { authenticated, handleLogout } = useAuth();
+  const { authenticated, authenticatedUser, handleLogout } = useAuth();
+  const { totalItems } = useCart();
 
-  useEffect(() => {
-    const themeLink = document.getElementById("theme-link") as HTMLLinkElement;
-    themeLink.href = darkMode
-      ? "https://unpkg.com/primereact/resources/themes/lara-dark-blue/theme.css"
-      : "https://unpkg.com/primereact/resources/themes/lara-light-blue/theme.css";
-    localStorage.setItem("theme", darkMode ? "dark" : "light");
-  }, [darkMode]);
-
-  const handleLogoutClick = () => {
-    handleLogout();
-    navigate("/login");
-  };
-
-  const items: MenuItem[] = authenticated
-    ? [
-        { label: "Home", icon: "pi pi-home", command: () => navigate("/") },
-        {
-          label: "Categorias",
-          icon: "pi pi-box",
-          items: [
-            {
-              label: "Listar",
-              icon: "pi pi-list",
-              command: () => navigate("/categories"),
-            },
-            {
-              label: "Novo",
-              icon: "pi pi-plus",
-              command: () => navigate("/categories/new"),
-            },
-          ],
-        },
-        {
-          label: "Produtos",
-          icon: "pi pi-box",
-          items: [
-            {
-              label: "Listar",
-              icon: "pi pi-list",
-              command: () => navigate("/products"),
-            },
-            {
-              label: "Novo",
-              icon: "pi pi-plus",
-              command: () => navigate("/products/new"),
-            },
-          ],
-        },
-        { label: "Prod. Show", icon: "pi pi-search", command: () => navigate("/products/show") },
-        ,
-        { label: "Prod. Show V2", icon: "pi pi-search", command: () => navigate("/products/card-list") },
-      ]
-    : [];
+  const items: MenuItem[] = [
+    { label: "Produtos", icon: "pi pi-shopping-bag", command: () => navigate("/") },
+    { label: "Carrinho", icon: "pi pi-shopping-cart", command: () => navigate("/cart") },
+    ...(authenticated
+      ? [{ label: "Pedidos", icon: "pi pi-list-check", command: () => navigate("/orders") }]
+      : []),
+  ];
 
   const start = (
-    <div
-      className="flex align-items-center gap-2 cursor-pointer"
-      onClick={() => navigate("/")}
-    >
-      <img
-        src="/assets/images/utfpr-logo-nb.png"
-        alt="Logo"
-        height={32}
-        style={{ objectFit: "contain" }}
-      />
-      <span className="font-bold text-lg hidden sm:block">PW44S</span>
-    </div>
+    <button className="brand-button" type="button" onClick={() => navigate("/")}>
+      <span className="brand-mark">B</span>
+      <span className="brand-name">Beauty Store</span>
+    </button>
   );
 
   const end = (
-    <div className="flex align-items-center gap-3">
-      <div className="flex items-center gap-2">
-        <i
-          className={`pi pi-sun ${
-            darkMode ? "text-gray-400" : "text-yellow-500"
-          }`}
-          style={{ marginTop: "5px" }}
-        />
-        <InputSwitch
-          checked={darkMode}
-          onChange={(e) => setDarkMode(e.value ?? false)}
-        />
-        <i
-          className={`pi pi-moon ${
-            darkMode ? "text-blue-300" : "text-gray-400"
-          }`}
-          style={{ marginTop: "5px" }}
-        />
-      </div>
+    <div className="top-menu-actions">
+      <Button
+        icon="pi pi-shopping-cart"
+        className="p-button-text"
+        onClick={() => navigate("/cart")}
+        tooltip="Carrinho"
+      />
+      {totalItems > 0 && <Badge value={totalItems} severity="danger" />}
 
-      {authenticated && (
+      {authenticated ? (
         <>
-          <span className="font-semibold hidden sm:block">{user}</span>
-          <Avatar
-            image="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Caleb"
-            shape="square"
-          />
+          <span className="user-name">{authenticatedUser?.displayName}</span>
           <Button
             icon="pi pi-sign-out"
             className="p-button-text"
-            onClick={handleLogoutClick}
+            onClick={() => {
+              handleLogout();
+              navigate("/");
+            }}
+            tooltip="Sair"
           />
         </>
+      ) : (
+        <Button
+          label="Entrar"
+          icon="pi pi-sign-in"
+          className="p-button-sm"
+          onClick={() => navigate("/login")}
+        />
       )}
     </div>
   );
 
-  return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        width: "100%",
-        zIndex: 1000,
-        backgroundColor: "var(--surface-ground)",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-      }}
-      className="fixed top-0 left-0 w-full z-50"
-    >
-      <Menubar model={items} start={start} end={end} />
-    </div>
-  );
+  return <Menubar className="app-menubar" model={items} start={start} end={end} />;
 };
 
 export default TopMenu;

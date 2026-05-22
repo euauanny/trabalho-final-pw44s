@@ -1,23 +1,20 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-
 import App from "@/App.tsx";
-
 import { PrimeReactProvider } from "primereact/api";
 import { BrowserRouter } from "react-router-dom";
-
-import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
-import "primereact/resources/primereact.min.css"; //core css
-import "primeicons/primeicons.css"; //icons
-import "primeflex/primeflex.css"; //flex utilities
-
 import { AuthProvider } from "@/context/AuthContext";
+import { CartProvider } from "@/context/CartContext";
+
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import "primeflex/primeflex.css";
 
 const themeId = "theme-link";
 const themeHref =
-  "https://unpkg.com/primereact/resources/themes/lara-light-blue/theme.css";
-
+  "https://unpkg.com/primereact/resources/themes/lara-light-rose/theme.css";
 const link = document.createElement("link");
 link.id = themeId;
 link.rel = "stylesheet";
@@ -29,7 +26,9 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <PrimeReactProvider>
         <AuthProvider>
-          <App />
+          <CartProvider>
+            <App />
+          </CartProvider>
         </AuthProvider>
       </PrimeReactProvider>
     </BrowserRouter>

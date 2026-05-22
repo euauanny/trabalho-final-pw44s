@@ -5,7 +5,7 @@ export function Layout() {
   return (
     <>
       <TopMenu />
-      <main style={{ paddingTop: "40px" }}>
+      <main className="page-shell">
         <Outlet />
       </main>
     </>

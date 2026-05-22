@@ -1,12 +1,31 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;  
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #24191d;
+  background: #fff7f8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-height: 100vh;
+  background: #fff7f8;
+}
+
+a {
+  color: #c2185b;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
 }
