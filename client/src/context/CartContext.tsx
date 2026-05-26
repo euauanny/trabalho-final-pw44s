@@ -1,6 +1,7 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import type { ICartItem, IProduct } from "@/commons/types";
+import { useAuth } from "@/context/hooks/use-auth";
 
 interface CartContextType {
   cart: ICartItem[];
@@ -19,14 +20,27 @@ interface CartProviderProps {
 const CartContext = createContext({} as CartContextType);
 
 export const CartProvider = ({ children }: CartProviderProps) => {
-  const [cart, setCart] = useState<ICartItem[]>(() => {
-    const saved = localStorage.getItem("cart");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { authenticated, authenticatedUser } = useAuth();
+  const cartKey = authenticatedUser?.username
+    ? `cart:${authenticatedUser.username}`
+    : undefined;
+  const [cart, setCart] = useState<ICartItem[]>([]);
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+    if (!authenticated || !cartKey) {
+      setCart([]);
+      return;
+    }
+
+    const saved = localStorage.getItem(cartKey);
+    setCart(saved ? JSON.parse(saved) : []);
+  }, [authenticated, cartKey]);
+
+  useEffect(() => {
+    if (authenticated && cartKey) {
+      localStorage.setItem(cartKey, JSON.stringify(cart));
+    }
+  }, [authenticated, cart, cartKey]);
 
   const addProduct = (product: IProduct) => {
     if (!product.id) {

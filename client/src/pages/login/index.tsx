@@ -1,14 +1,14 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Toast } from "primereact/toast";
 import type { AuthenticationResponse, IUserLogin } from "@/commons/types";
 import AuthService from "@/services/auth-service";
 import { useAuth } from "@/context/hooks/use-auth";
+import { useToast } from "@/context/hooks/use-toast";
 
 export const LoginPage = () => {
   const {
@@ -21,7 +21,7 @@ export const LoginPage = () => {
   const { handleLogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const toast = useRef<Toast>(null);
+  const { showToast } = useToast();
 
   const from = (location.state as { from?: { pathname: string } } | null)?.from?.pathname;
 
@@ -31,13 +31,18 @@ export const LoginPage = () => {
 
     if (response.success && response.data) {
       await handleLogin(response.data as AuthenticationResponse);
+      showToast({
+        severity: "success",
+        summary: "Bem-vinda",
+        detail: "Login efetuado com sucesso.",
+        life: 2000,
+      });
       navigate(from || "/", { replace: true });
     } else {
-      toast.current?.show({
+      showToast({
         severity: "error",
         summary: "Erro",
         detail: "Usuario ou senha invalidos.",
-        life: 3000,
       });
     }
 
@@ -46,7 +51,6 @@ export const LoginPage = () => {
 
   return (
     <div className="auth-page">
-      <Toast ref={toast} />
       <Card title="Entrar" className="auth-card">
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-column gap-3">
           <div>

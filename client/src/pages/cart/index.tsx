@@ -2,14 +2,12 @@ import { Button } from "primereact/button";
 import { InputNumber } from "primereact/inputnumber";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/hooks/use-cart";
-import { useAuth } from "@/context/hooks/use-auth";
 
 const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export const CartPage = () => {
   const { cart, total, updateQuantity, removeProduct, clearCart } = useCart();
-  const { authenticated } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -47,21 +45,24 @@ export const CartPage = () => {
                   <h3>{item.product.name}</h3>
                   <span>{formatCurrency(item.product.price)}</span>
                 </div>
-                <InputNumber
-                  value={item.quantity}
-                  min={1}
-                  showButtons
-                  buttonLayout="horizontal"
-                  decrementButtonIcon="pi pi-minus"
-                  incrementButtonIcon="pi pi-plus"
-                  onValueChange={(event) =>
-                    updateQuantity(item.product.id!, Number(event.value || 1))
-                  }
-                />
+                <div className="cart-quantity">
+                  <InputNumber
+                    value={item.quantity}
+                    min={1}
+                    showButtons
+                    buttonLayout="horizontal"
+                    decrementButtonIcon="pi pi-minus"
+                    incrementButtonIcon="pi pi-plus"
+                    inputClassName="cart-quantity-input"
+                    onValueChange={(event) =>
+                      updateQuantity(item.product.id!, Number(event.value || 1))
+                    }
+                  />
+                </div>
                 <strong>{formatCurrency(item.product.price * item.quantity)}</strong>
                 <Button
                   icon="pi pi-times"
-                  className="p-button-text p-button-danger"
+                  className="p-button-text p-button-danger cart-remove-button"
                   onClick={() => removeProduct(item.product.id!)}
                   tooltip="Remover"
                 />
@@ -85,11 +86,7 @@ export const CartPage = () => {
             <Button
               label="Finalizar compra"
               icon="pi pi-check"
-              onClick={() =>
-                authenticated
-                  ? navigate("/checkout")
-                  : navigate("/login", { state: { from: { pathname: "/checkout" } } })
-              }
+              onClick={() => navigate("/checkout")}
             />
           </aside>
         </section>

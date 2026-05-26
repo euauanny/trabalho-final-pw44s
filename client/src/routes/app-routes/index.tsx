@@ -8,6 +8,7 @@ import { ProductDetailPage } from "@/pages/product-detail";
 import { CartPage } from "@/pages/cart";
 import { CheckoutPage } from "@/pages/checkout";
 import { OrdersPage } from "@/pages/orders";
+import { AccountPage } from "@/pages/account";
 
 export function AppRoutes() {
   return (
@@ -15,11 +16,12 @@ export function AppRoutes() {
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="products/:id" element={<ProductDetailPage />} />
-        <Route path="cart" element={<CartPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
 
         <Route element={<RequireAuth />}>
+          <Route path="account" element={<AccountPage />} />
+          <Route path="cart" element={<CartPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
           <Route path="orders" element={<OrdersPage />} />
         </Route>

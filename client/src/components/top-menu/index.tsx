@@ -13,32 +13,39 @@ const TopMenu = () => {
 
   const items: MenuItem[] = [
     { label: "Produtos", icon: "pi pi-shopping-bag", command: () => navigate("/") },
-    { label: "Carrinho", icon: "pi pi-shopping-cart", command: () => navigate("/cart") },
     ...(authenticated
-      ? [{ label: "Pedidos", icon: "pi pi-list-check", command: () => navigate("/orders") }]
+      ? [
+          { label: "Carrinho", icon: "pi pi-shopping-cart", command: () => navigate("/cart") },
+          { label: "Pedidos", icon: "pi pi-list-check", command: () => navigate("/orders") },
+          { label: "Minha conta", icon: "pi pi-user", command: () => navigate("/account") },
+        ]
       : []),
   ];
 
   const start = (
     <button className="brand-button" type="button" onClick={() => navigate("/")}>
-      <span className="brand-mark">B</span>
-      <span className="brand-name">Beauty Store</span>
+     <span className="brand-mark">P</span>
+      <span className="brand-name">PinkChic</span>
     </button>
   );
 
   const end = (
     <div className="top-menu-actions">
-      <Button
-        icon="pi pi-shopping-cart"
-        className="p-button-text"
-        onClick={() => navigate("/cart")}
-        tooltip="Carrinho"
-      />
-      {totalItems > 0 && <Badge value={totalItems} severity="danger" />}
-
       {authenticated ? (
         <>
-          <span className="user-name">{authenticatedUser?.displayName}</span>
+          <Button
+            icon="pi pi-shopping-cart"
+            className="p-button-text"
+            onClick={() => navigate("/cart")}
+            tooltip="Carrinho"
+          />
+          {totalItems > 0 && <Badge value={totalItems} severity="danger" />}
+          <Button
+            label={authenticatedUser?.displayName || "Minha conta"}
+            icon="pi pi-user"
+            className="p-button-text account-button"
+            onClick={() => navigate("/account")}
+          />
           <Button
             icon="pi pi-sign-out"
             className="p-button-text"

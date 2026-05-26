@@ -24,6 +24,7 @@ insert into tb_product (name, description, price, url_image, category_id) values
 insert into tb_product (name, description, price, url_image, category_id) values ('Wella Professionals Ultimate Luxe Oil Mascara 150ml', 'Wella. Desconto de 50%. Estoque: 12 unidades. Avaliacao: 4.6.', 150.00, '/img/wella/creme_wella.png', 3);
 insert into tb_product (name, description, price, url_image, category_id) values ('Elseve Liso dos Sonhos Serum Leave-In 100ml', 'Elseve. Desconto de 50%. Estoque: 25 unidades. Avaliacao: 4.4.', 45.00, '/img/elseve_liso_dos_sonhos/elseve_liso_dos_sonhos.png', 3);
 
--- Usuarios de teste. Senha: UTFPR@123
-insert into tb_user(display_name, username, password, email) values ('Administrador', 'auanny', '$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem', 'admin@example.com');
+-- Usuarios de teste. Senha do usuario auanny: Auanny123@
+-- Senha do usuario test: UTFPR@123
+insert into tb_user(display_name, username, password, email) values ('auanny', 'auanny', '$2a$10$dy6mmZ7mctS09keH6iVAMu6026r5Isk361QJHb3XOQf0KcX42Iwku', 'admin@example.com');
 insert into tb_user(display_name, username, password, email) values ('Teste', 'test', '$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem', 'test@example.com');

@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "primereact/card";
 import { Tag } from "primereact/tag";
-import { Toast } from "primereact/toast";
 import type { IOrder } from "@/commons/types";
 import OrderService from "@/services/order-service";
+import { useToast } from "@/context/hooks/use-toast";
 
 const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export const OrdersPage = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
-  const toast = useRef<Toast>(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const loadOrders = async () => {
@@ -18,11 +18,10 @@ export const OrdersPage = () => {
       if (response.success && Array.isArray(response.data)) {
         setOrders(response.data as IOrder[]);
       } else {
-        toast.current?.show({
+        showToast({
           severity: "error",
           summary: "Erro",
           detail: "Nao foi possivel carregar os pedidos.",
-          life: 3000,
         });
       }
     };
@@ -32,7 +31,6 @@ export const OrdersPage = () => {
 
   return (
     <div className="orders-page">
-      <Toast ref={toast} />
       <div className="page-title-row">
         <div>
           <h1>Meus pedidos</h1>

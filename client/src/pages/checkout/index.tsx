@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { Toast } from "primereact/toast";
 import { useNavigate } from "react-router-dom";
 import type { IAddress } from "@/commons/types";
 import { useCart } from "@/context/hooks/use-cart";
 import AddressService from "@/services/address-service";
 import CepService from "@/services/cep-service";
 import OrderService from "@/services/order-service";
+import { useToast } from "@/context/hooks/use-toast";
 
 const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -30,7 +30,7 @@ export const CheckoutPage = () => {
   const [loading, setLoading] = useState(false);
   const { cart, total, clearCart } = useCart();
   const navigate = useNavigate();
-  const toast = useRef<Toast>(null);
+  const { showToast } = useToast();
   const { control, handleSubmit, reset, getValues } = useForm<IAddress>({
     defaultValues: emptyAddress,
   });
@@ -62,7 +62,7 @@ export const CheckoutPage = () => {
   const saveAddress = async (address: IAddress) => {
     const response = await AddressService.save(address);
     if (response.success) {
-      toast.current?.show({
+      showToast({
         severity: "success",
         summary: "Endereco",
         detail: "Endereco cadastrado.",
@@ -71,22 +71,20 @@ export const CheckoutPage = () => {
       reset(emptyAddress);
       await loadAddresses();
     } else {
-      toast.current?.show({
+      showToast({
         severity: "error",
         summary: "Erro",
         detail: "Nao foi possivel cadastrar o endereco.",
-        life: 3000,
       });
     }
   };
 
   const finishOrder = async () => {
     if (!selectedAddressId) {
-      toast.current?.show({
+      showToast({
         severity: "warn",
         summary: "Endereco",
         detail: "Selecione ou cadastre um endereco.",
-        life: 3000,
       });
       return;
     }
@@ -102,13 +100,17 @@ export const CheckoutPage = () => {
 
     if (response.success) {
       clearCart();
+      showToast({
+        severity: "success",
+        summary: "Pedido",
+        detail: "Compra finalizada com sucesso.",
+      });
       navigate("/orders");
     } else {
-      toast.current?.show({
+      showToast({
         severity: "error",
         summary: "Erro",
         detail: "Nao foi possivel finalizar o pedido.",
-        life: 3000,
       });
     }
     setLoading(false);
@@ -121,7 +123,6 @@ export const CheckoutPage = () => {
 
   return (
     <div className="checkout-page">
-      <Toast ref={toast} />
       <div className="page-title-row">
         <div>
           <h1>Finalizar compra</h1>

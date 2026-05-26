@@ -1,13 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { Paginator } from "primereact/paginator";
-import { Toast } from "primereact/toast";
 import type { ICategory, IProduct } from "@/commons/types";
 import ProductService from "@/services/product-service";
 import CategoryService from "@/services/category-service";
 import { useCart } from "@/context/hooks/use-cart";
+import { useAuth } from "@/context/hooks/use-auth";
+import { useToast } from "@/context/hooks/use-toast";
 
 const pageSize = 8;
 
@@ -21,7 +22,10 @@ export const HomePage = () => {
   const [first, setFirst] = useState(0);
   const [loading, setLoading] = useState(true);
   const { addProduct } = useCart();
-  const toast = useRef<Toast>(null);
+  const { authenticated } = useAuth();
+  const { showToast } = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -42,11 +46,10 @@ export const HomePage = () => {
         setProducts(response.data as IProduct[]);
         setFirst(0);
       } else {
-        toast.current?.show({
+        showToast({
           severity: "error",
           summary: "Erro",
           detail: "Nao foi possivel carregar os produtos.",
-          life: 3000,
         });
       }
       setLoading(false);
@@ -65,17 +68,34 @@ export const HomePage = () => {
     ...categories.map((category) => ({ label: category.name, value: category.id })),
   ];
 
+  const handleAddProduct = (product: IProduct) => {
+    if (!authenticated) {
+      showToast({
+        severity: "warn",
+        summary: "Login necessario",
+        detail: "Entre na sua conta para usar o carrinho.",
+      });
+      navigate("/login", { state: { from: location } });
+      return;
+    }
+
+    addProduct(product);
+    showToast({
+      severity: "success",
+      summary: "Carrinho",
+      detail: "Produto adicionado.",
+      life: 1800,
+    });
+  };
+
   return (
     <div className="store-page">
-      <Toast ref={toast} />
-
       <section className="store-hero">
         <div>
-          <p className="eyebrow">Loja de beleza</p>
+          <p className="eyebrow">PinkChic</p>
           <h1>Produtos para maquiagem, perfume e cuidado diario</h1>
           <p>
-            Catalogo conectado ao backend Spring, carrinho persistido no navegador
-            e compra finalizada somente com usuario autenticado.
+           By Auanny Comerlato
           </p>
         </div>
       </section>
@@ -113,17 +133,9 @@ export const HomePage = () => {
                   <p>{product.description}</p>
                   <strong>{formatCurrency(product.price)}</strong>
                   <Button
-                    label="Adicionar"
+                    label={"Adicionar ao carrinho"}
                     icon="pi pi-shopping-cart"
-                    onClick={() => {
-                      addProduct(product);
-                      toast.current?.show({
-                        severity: "success",
-                        summary: "Carrinho",
-                        detail: "Produto adicionado.",
-                        life: 1800,
-                      });
-                    }}
+                    onClick={() => handleAddProduct(product)}
                   />
                 </div>
               </article>

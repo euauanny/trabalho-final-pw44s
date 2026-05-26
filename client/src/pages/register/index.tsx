@@ -1,13 +1,13 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Link, useNavigate } from "react-router-dom";
-import { Toast } from "primereact/toast";
 import type { IUserRegister } from "@/commons/types";
 import AuthService from "@/services/auth-service";
+import { useToast } from "@/context/hooks/use-toast";
 
 export const RegisterPage = () => {
   const {
@@ -20,14 +20,14 @@ export const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const { signup } = AuthService;
   const navigate = useNavigate();
-  const toast = useRef<Toast>(null);
+  const { showToast } = useToast();
 
   const onSubmit = async (data: IUserRegister) => {
     setLoading(true);
     const response = await signup(data);
 
     if (response.success) {
-      toast.current?.show({
+      showToast({
         severity: "success",
         summary: "Sucesso",
         detail: "Usuario cadastrado.",
@@ -35,11 +35,10 @@ export const RegisterPage = () => {
       });
       setTimeout(() => navigate("/login"), 800);
     } else {
-      toast.current?.show({
+      showToast({
         severity: "error",
         summary: "Erro",
         detail: "Nao foi possivel cadastrar. Verifique usuario, email e senha.",
-        life: 3500,
       });
     }
 
@@ -48,7 +47,6 @@ export const RegisterPage = () => {
 
   return (
     <div className="auth-page">
-      <Toast ref={toast} />
       <Card title="Criar conta" className="auth-card">
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-column gap-3">
           <div>
