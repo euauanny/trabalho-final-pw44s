@@ -8,6 +8,8 @@ import br.edu.utfpr.pb.pw44s.server.model.Order;
 import br.edu.utfpr.pb.pw44s.server.model.User;
 import br.edu.utfpr.pb.pw44s.server.model.OrderItems;
 import br.edu.utfpr.pb.pw44s.server.model.Product;
+import br.edu.utfpr.pb.pw44s.server.model.Address;
+import br.edu.utfpr.pb.pw44s.server.repository.AddressRepository;
 import br.edu.utfpr.pb.pw44s.server.repository.ProductRepository;
 import br.edu.utfpr.pb.pw44s.server.service.ICrudService;
 import br.edu.utfpr.pb.pw44s.server.service.IOrderService;
@@ -30,10 +32,13 @@ public class OrderController extends CrudController<Order, OrderDTO, Long> {
 
     private final OrderMapper orderMapper;
     private final ProductRepository productRepository;
+    private final AddressRepository addressRepository;
 
-    public OrderController(IOrderService orderService, OrderMapper orderMapper, ProductRepository productRepository) {
+    public OrderController(IOrderService orderService, OrderMapper orderMapper,
+                           ProductRepository productRepository, AddressRepository addressRepository) {
         this.orderMapper = orderMapper;
         this.productRepository = productRepository;
+        this.addressRepository = addressRepository;
         OrderController.orderService = orderService;
     }
 
@@ -78,6 +83,17 @@ public class OrderController extends CrudController<Order, OrderDTO, Long> {
         order.setUserId(userId);
         order.setDate(LocalDateTime.now());
 
+        if (createDTO.getAddressId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // Confirma que o endereco escolhido pertence ao usuario autenticado.
+        Address address = addressRepository.findByIdAndUserId(createDTO.getAddressId(), userId).orElse(null);
+        if (address == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        order.setDeliveryAddress(formatAddress(address));
+
         java.util.List<OrderItems> items = new java.util.ArrayList<>();
         java.math.BigDecimal total = java.math.BigDecimal.ZERO;
 
@@ -114,6 +130,15 @@ public class OrderController extends CrudController<Order, OrderDTO, Long> {
         // CascadeType.ALL tambem persiste os itens quando o pedido e salvo.
         Order saved = orderService.save(order);
         return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(orderMapper.toDto(saved));
+    }
+
+    private String formatAddress(Address address) {
+        String formatted = address.getLogradouro() + ", " + address.getNumero()
+                + " - " + address.getBairro() + " - CEP " + address.getCep();
+        if (address.getComplemento() != null && !address.getComplemento().isBlank()) {
+            formatted += " - " + address.getComplemento();
+        }
+        return formatted;
     }
 
     private long getCurrentUserId() {

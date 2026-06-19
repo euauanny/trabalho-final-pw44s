@@ -32,6 +32,10 @@ public class Order {
 
     @NotNull
     private long userId;
+
+    // Copia o endereco usado na compra para preservar o historico do pedido.
+    @NotNull
+    private String deliveryAddress;
     
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     // Salvar/excluir o pedido propaga a operacao para seus itens.

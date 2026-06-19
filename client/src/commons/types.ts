@@ -73,6 +73,7 @@ export interface IOrder {
   id?: number;
   date: string;
   userId: number;
+  deliveryAddress?: string;
   items: IOrderItem[];
   total: number;
 }

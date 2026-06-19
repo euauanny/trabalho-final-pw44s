@@ -52,6 +52,12 @@ export const OrdersPage = () => {
                 </div>
                 <Tag value={formatCurrency(order.total)} severity="success" />
               </div>
+              {order.deliveryAddress && (
+                <div className="order-delivery-address">
+                  <strong>Endereço de entrega</strong>
+                  <span>{order.deliveryAddress}</span>
+                </div>
+              )}
               <div className="order-items">
                 {order.items?.map((item) => (
                   <div className="summary-line" key={`${order.id}-${item.productId}`}>

@@ -10,6 +10,15 @@ import { useToast } from "@/context/hooks/use-toast";
 const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
+const getProductDetails = (description: string) => {
+  // A descricao do backend segue: marca, desconto, estoque e avaliacao.
+  const brand = description.split(".")[0]?.trim();
+  const stock = description.match(/Estoque:\s*([^.]*)/i)?.[1]?.trim();
+  const rating = description.match(/Avaliacao:\s*([\d.,]+)/i)?.[1]?.trim();
+
+  return { brand, stock, rating };
+};
+
 export const ProductDetailPage = () => {
   // Guarda o produto carregado pelo id da URL.
   const [product, setProduct] = useState<IProduct>();
@@ -45,6 +54,8 @@ export const ProductDetailPage = () => {
   if (!product) {
     return <div className="empty-state">Produto nao encontrado.</div>;
   }
+
+  const productDetails = getProductDetails(product.description);
 
   const handleAddProduct = () => {
     // Produto so pode ir ao carrinho se o usuario estiver logado.
@@ -84,15 +95,42 @@ export const ProductDetailPage = () => {
           />
         </div>
         <div className="detail-info">
-          <span>{product.category?.name}</span>
+          <span className="detail-category">{product.category?.name}</span>
           <h1>{product.name}</h1>
-          <p>{product.description}</p>
-          <strong>{formatCurrency(product.price)}</strong>
-          <Button
-            label={ "Adicionar ao carrinho"}
-            icon="pi pi-shopping-cart"
-            onClick={handleAddProduct}
-          />
+          <div className="detail-attributes">
+            <div className="detail-attribute">
+              <i className="pi pi-tag" />
+              <div>
+                <small>Marca</small>
+                <strong>{productDetails.brand}</strong>
+              </div>
+            </div>
+            <div className="detail-attribute">
+              <i className="pi pi-box" />
+              <div>
+                <small>Estoque</small>
+                <strong>{productDetails.stock || "Nao informado"}</strong>
+              </div>
+            </div>
+            <div className="detail-attribute">
+              <i className="pi pi-star-fill" />
+              <div>
+                <small>Avaliacao</small>
+                <strong>{productDetails.rating || "Nao informada"}</strong>
+              </div>
+            </div>
+          </div>
+          <div className="detail-purchase">
+            <div>
+              <small>Preco</small>
+              <strong>{formatCurrency(product.price)}</strong>
+            </div>
+            <Button
+              label="Adicionar ao carrinho"
+              icon="pi pi-shopping-cart"
+              onClick={handleAddProduct}
+            />
+          </div>
         </div>
       </section>
     </div>

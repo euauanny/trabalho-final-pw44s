@@ -25,6 +25,8 @@ public class OrderDTO {
     @NotNull
     private long userId;
 
+    private String deliveryAddress;
+
     private List<OrderItemDTO> items;
 
     private BigDecimal total;
