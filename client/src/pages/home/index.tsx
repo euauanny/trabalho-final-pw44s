@@ -15,6 +15,14 @@ const pageSize = 8;
 const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
+const getProductDetails = (description: string) => {
+  const brand = description.split(".")[0]?.trim();
+  const stock = description.match(/Estoque:\s*([^.]*)/i)?.[1]?.trim();
+  const rating = description.match(/Avaliacao:\s*([\d.,]+)/i)?.[1]?.trim();
+
+  return { brand, stock, rating };
+};
+
 export const HomePage = () => {
   // Estados da tela: produtos, categorias, filtro, pagina atual e loading.
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -127,28 +135,45 @@ export const HomePage = () => {
         <>
           <section className="product-grid">
             {/* Renderiza um card para cada produto da pagina atual. */}
-            {visibleProducts.map((product) => (
-              <article className="product-card" key={product.id}>
-                <Link to={`/products/${product.id}`} className="product-image-link">
-                  {/* urlImage vem do backend e aponta para a pasta public/img do frontend. */}
-                  <img
-                    src={product.urlImage || "https://placehold.co/600x600/fce7f3/9f1239?text=Beauty"}
-                    alt={product.name}
-                  />
-                </Link>
-                <div className="product-card-body">
-                  <span>{product.category?.name}</span>
-                  <h3>{product.name}</h3>
-                  <p>{product.description}</p>
-                  <strong>{formatCurrency(product.price)}</strong>
-                  <Button
-                    label={"Adicionar ao carrinho"}
-                    icon="pi pi-shopping-cart"
-                    onClick={() => handleAddProduct(product)}
-                  />
-                </div>
-              </article>
-            ))}
+            {visibleProducts.map((product) => {
+              const details = getProductDetails(product.description);
+
+              return (
+                <article className="product-card" key={product.id}>
+                  <Link to={`/products/${product.id}`} className="product-image-link">
+                    {/* urlImage vem do backend e aponta para a pasta public/img do frontend. */}
+                    <img
+                      src={product.urlImage || "https://placehold.co/600x600/fce7f3/9f1239?text=Beauty"}
+                      alt={product.name}
+                    />
+                  </Link>
+                  <div className="product-card-body">
+                    <span className="product-category">{product.category?.name}</span>
+                    <h3>{product.name}</h3>
+                    <div className="product-card-details">
+                      <span>
+                        <i className="pi pi-tag" />
+                        {details.brand}
+                      </span>
+                      <span>
+                        <i className="pi pi-box" />
+                        {details.stock || "Estoque nao informado"}
+                      </span>
+                      <span>
+                        <i className="pi pi-star-fill" />
+                        {details.rating || "Sem avaliacao"}
+                      </span>
+                    </div>
+                    <strong>{formatCurrency(product.price)}</strong>
+                    <Button
+                      label="Adicionar ao carrinho"
+                      icon="pi pi-shopping-cart"
+                      onClick={() => handleAddProduct(product)}
+                    />
+                  </div>
+                </article>
+              );
+            })}
           </section>
 
           <Paginator
