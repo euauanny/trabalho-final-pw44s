@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = OrderItemMapper.class)
+// Converte pedidos e usa OrderItemMapper para converter a lista de itens.
 public interface OrderMapper {
 
     Order toEntity(OrderDTO dto);

@@ -26,6 +26,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <PrimeReactProvider>
+        {/* Providers globais: autenticacao, carrinho e toasts ficam disponiveis para todas as paginas. */}
         <AuthProvider>
           <CartProvider>
             <ToastProvider>

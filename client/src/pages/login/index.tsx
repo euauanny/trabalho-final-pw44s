@@ -11,6 +11,7 @@ import { useAuth } from "@/context/hooks/use-auth";
 import { useToast } from "@/context/hooks/use-toast";
 
 export const LoginPage = () => {
+  // useForm controla os campos username e password e suas validacoes.
   const {
     control,
     handleSubmit,
@@ -26,10 +27,12 @@ export const LoginPage = () => {
   const from = (location.state as { from?: { pathname: string } } | null)?.from?.pathname;
 
   const onSubmit = async (userLogin: IUserLogin) => {
+    // Envia as credenciais para o backend pelo AuthService.
     setLoading(true);
     const response = await login(userLogin);
 
     if (response.success && response.data) {
+      // Se o login der certo, salva token/usuario no AuthContext.
       await handleLogin(response.data as AuthenticationResponse);
       showToast({
         severity: "success",
@@ -39,6 +42,7 @@ export const LoginPage = () => {
       });
       navigate(from || "/", { replace: true });
     } else {
+      // Se o backend retornar erro, exibe toast global.
       showToast({
         severity: "error",
         summary: "Erro",
@@ -58,6 +62,7 @@ export const LoginPage = () => {
               Usuario
             </label>
             <Controller
+              // Controller liga o InputText do PrimeReact ao React Hook Form.
               name="username"
               control={control}
               rules={{ required: "Informe o usuario" }}
@@ -77,6 +82,7 @@ export const LoginPage = () => {
               Senha
             </label>
             <Controller
+              // Controller liga o Password do PrimeReact ao React Hook Form.
               name="password"
               control={control}
               rules={{ required: "Informe a senha" }}

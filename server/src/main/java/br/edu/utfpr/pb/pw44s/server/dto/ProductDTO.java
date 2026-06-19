@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+// Produto no formato usado pelas requisicoes e respostas HTTP.
 public class ProductDTO {
 
     private Long id;

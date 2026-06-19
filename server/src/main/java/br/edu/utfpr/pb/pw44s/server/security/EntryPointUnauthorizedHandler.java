@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component("authenticationEntryPoint")
+// Padroniza a resposta quando uma rota protegida e acessada sem autenticacao valida.
 public class EntryPointUnauthorizedHandler
         implements AuthenticationEntryPoint {
 
@@ -19,6 +20,7 @@ public class EntryPointUnauthorizedHandler
                          HttpServletResponse response,
                          AuthenticationException authException)
                             throws IOException, ServletException {
+        // HTTP 401 informa que o cliente precisa se autenticar.
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
     }

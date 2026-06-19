@@ -14,11 +14,13 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
+        {/* Rotas publicas: podem ser acessadas sem login. */}
         <Route index element={<HomePage />} />
         <Route path="products/:id" element={<ProductDetailPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
 
+        {/* Rotas protegidas: RequireAuth redireciona para login se o usuario nao estiver autenticado. */}
         <Route element={<RequireAuth />}>
           <Route path="account" element={<AccountPage />} />
           <Route path="cart" element={<CartPage />} />

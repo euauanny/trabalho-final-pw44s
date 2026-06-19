@@ -14,6 +14,7 @@ export const OrdersPage = () => {
 
   useEffect(() => {
     const loadOrders = async () => {
+      // Busca historico de pedidos do usuario autenticado.
       const response = await OrderService.findAll();
       if (response.success && Array.isArray(response.data)) {
         setOrders(response.data as IOrder[]);
@@ -34,7 +35,6 @@ export const OrdersPage = () => {
       <div className="page-title-row">
         <div>
           <h1>Meus pedidos</h1>
-          <p>Historico de compras realizadas pelo usuario autenticado.</p>
         </div>
       </div>
 
@@ -42,6 +42,7 @@ export const OrdersPage = () => {
         <div className="empty-state">Nenhum pedido encontrado.</div>
       ) : (
         <div className="orders-list">
+          {/* Cada pedido vira um Card com cabecalho, total e itens comprados. */}
           {orders.map((order) => (
             <Card key={order.id} className="order-card">
               <div className="order-header">

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("users")
+// Recebe o cadastro de novos usuarios.
 public class UserController {
 
     private final UserService userService;
@@ -24,6 +25,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<GenericResponse> createUser(@RequestBody @Valid UserDTO userDTO) {
+        // O mapper converte o DTO e o service valida duplicidade e criptografa a senha.
         this.userService.save(userMapper.toEntity(userDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(new GenericResponse("Usuário salvo com sucesso"));
     }

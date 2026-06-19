@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import java.io.IOException;
 
+// Valida o token enviado em cada requisicao realizada depois do login.
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final AuthService authService;
@@ -49,6 +50,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader(SecurityConstants.HEADER_STRING);
 
         //verifica se o token é válido e retorna o username
+        // Confere assinatura e validade, depois recupera o username salvo no token.
         String username = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET))
                 .build()
                 .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))

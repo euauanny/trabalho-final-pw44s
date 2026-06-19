@@ -28,6 +28,7 @@ import java.util.Date;
 
 
 @NoArgsConstructor
+// Processa o login: le as credenciais, autentica e devolve um token JWT.
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
@@ -45,6 +46,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                                 throws AuthenticationException {
 
         try {
+            // O ObjectMapper transforma o JSON recebido em AuthRequestDTO.
             //HTTP.POST {"username":"admin", "password":"P4ssword"}
             //Obtém os dados de username e password utilizando o ObjectMapper para converter o JSON
             //em um objeto User com esses dados.
@@ -62,6 +64,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             //de criptografia da senha, a senha informada durante a autenticação é criptografada e
             //comparada com a senha armazenada no banco. Caso não esteja correta uma Exception será disparada
             //Caso ocorra sucesso será chamado o método: successfulAuthentication dessa classe
+            // O AuthenticationManager compara a senha com o hash BCrypt do banco.
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             credentials.getUsername(),
@@ -81,6 +84,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             @NonNull FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 
+        // Este metodo e chamado somente quando username e senha foram aceitos.
         User user = (User) authService.loadUserByUsername(authResult.getName());
         // o método create() da classe JWT é utilizado para criação de um novo token JWT
         String token = JWT.create()
@@ -96,6 +100,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setContentType("application/json");
 
+        // A resposta contem o token e os dados basicos usados pelo frontend.
         response.getWriter().write(
                 new ObjectMapper().writeValueAsString(
                         new AuthenticationResponse(token, new UserResponseDTO(user)))

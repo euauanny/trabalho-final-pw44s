@@ -11,6 +11,7 @@ const TopMenu = () => {
   const { authenticated, authenticatedUser, handleLogout } = useAuth();
   const { totalItems } = useCart();
 
+  // Itens do menu mudam conforme o login. Carrinho, pedidos e conta so aparecem autenticados.
   const items: MenuItem[] = [
     { label: "Produtos", icon: "pi pi-shopping-bag", command: () => navigate("/") },
     ...(authenticated
@@ -22,6 +23,7 @@ const TopMenu = () => {
       : []),
   ];
 
+  // Marca clicavel que sempre volta para a Home.
   const start = (
     <button className="brand-button" type="button" onClick={() => navigate("/")}>
      <span className="brand-mark">P</span>
@@ -29,6 +31,7 @@ const TopMenu = () => {
     </button>
   );
 
+  // Lado direito do menu: login quando deslogado; carrinho, usuario e sair quando logado.
   const end = (
     <div className="top-menu-actions">
       {authenticated ? (
@@ -50,6 +53,7 @@ const TopMenu = () => {
             icon="pi pi-sign-out"
             className="p-button-text"
             onClick={() => {
+              // Logout limpa token/usuario e volta para a pagina inicial.
               handleLogout();
               navigate("/");
             }}

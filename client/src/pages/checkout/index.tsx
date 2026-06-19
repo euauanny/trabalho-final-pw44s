@@ -24,6 +24,7 @@ const emptyAddress: IAddress = {
 };
 
 export const CheckoutPage = () => {
+  // Estados da tela de checkout: enderecos, endereco escolhido, pagamento e loading.
   const [addresses, setAddresses] = useState<IAddress[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<number>();
   const [paymentMethod, setPaymentMethod] = useState("CARTAO");
@@ -36,6 +37,7 @@ export const CheckoutPage = () => {
   });
 
   const loadAddresses = async () => {
+    // Busca os enderecos do usuario autenticado no backend.
     const response = await AddressService.findAll();
     if (response.success && Array.isArray(response.data)) {
       const loaded = response.data as IAddress[];
@@ -45,6 +47,7 @@ export const CheckoutPage = () => {
   };
 
   useEffect(() => {
+    // Se o carrinho estiver vazio, nao faz sentido finalizar compra.
     if (cart.length === 0) {
       navigate("/cart");
       return;
@@ -53,6 +56,7 @@ export const CheckoutPage = () => {
   }, []);
 
   const handleCepBlur = async () => {
+    // Busca dados do CEP no ViaCEP e preenche o formulario.
     const address = await CepService.findAddressByCep(getValues("cep"));
     if (address) {
       reset({ ...getValues(), ...address });
@@ -60,6 +64,7 @@ export const CheckoutPage = () => {
   };
 
   const saveAddress = async (address: IAddress) => {
+    // Cadastra endereco no backend e recarrega a lista de enderecos.
     const response = await AddressService.save(address);
     if (response.success) {
       showToast({
@@ -80,6 +85,7 @@ export const CheckoutPage = () => {
   };
 
   const finishOrder = async () => {
+    // Antes de criar pedido, precisa ter um endereco selecionado.
     if (!selectedAddressId) {
       showToast({
         severity: "warn",
@@ -90,6 +96,7 @@ export const CheckoutPage = () => {
     }
 
     setLoading(true);
+    // Monta o payload esperado pelo backend: addressId + lista de productId/quantity.
     const response = await OrderService.checkout({
       addressId: selectedAddressId,
       items: cart.map((item) => ({
@@ -99,6 +106,7 @@ export const CheckoutPage = () => {
     });
 
     if (response.success) {
+      // Pedido criado: limpa carrinho e abre historico de pedidos.
       clearCart();
       showToast({
         severity: "success",
@@ -117,6 +125,7 @@ export const CheckoutPage = () => {
   };
 
   const addressOptions = addresses.map((address) => ({
+    // Dropdown precisa de label para exibir e value para salvar o id selecionado.
     label: `${address.logradouro}, ${address.numero} - ${address.bairro}`,
     value: address.id,
   }));

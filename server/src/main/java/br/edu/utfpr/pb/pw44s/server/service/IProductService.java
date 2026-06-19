@@ -4,6 +4,7 @@ import br.edu.utfpr.pb.pw44s.server.model.Product;
 
 import java.util.List;
 
+// Acrescenta ao CRUD a filtragem de produtos por categoria.
 public interface IProductService extends ICrudService<Product, Long> {
 	List<Product> findByCategoryId(Long categoryId);
 }

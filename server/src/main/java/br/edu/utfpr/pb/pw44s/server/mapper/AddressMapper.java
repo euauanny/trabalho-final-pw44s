@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+// O MapStruct gera a conversao entre Address e AddressDTO na compilacao.
 public interface AddressMapper {
 
     Address toEntity(AddressDTO dto);

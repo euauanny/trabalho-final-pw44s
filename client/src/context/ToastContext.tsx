@@ -17,6 +17,7 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
   const toast = useRef<Toast>(null);
 
   const showToast = (message: ToastMessage) => {
+    // Funcao global para qualquer pagina exibir mensagem de feedback.
     toast.current?.show({ life: 3000, ...message });
   };
 

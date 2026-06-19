@@ -10,6 +10,7 @@ import AuthService from "@/services/auth-service";
 import { useToast } from "@/context/hooks/use-toast";
 
 export const RegisterPage = () => {
+  // Formulario de cadastro controlado pelo React Hook Form.
   const {
     control,
     handleSubmit,
@@ -23,10 +24,12 @@ export const RegisterPage = () => {
   const { showToast } = useToast();
 
   const onSubmit = async (data: IUserRegister) => {
+    // Envia os dados para POST /users por meio do AuthService.
     setLoading(true);
     const response = await signup(data);
 
     if (response.success) {
+      // Cadastro concluido: mostra feedback e manda para login.
       showToast({
         severity: "success",
         summary: "Sucesso",
@@ -35,6 +38,7 @@ export const RegisterPage = () => {
       });
       setTimeout(() => navigate("/login"), 800);
     } else {
+      // Cadastro falhou: backend pode ter recusado username/email/senha.
       showToast({
         severity: "error",
         summary: "Erro",

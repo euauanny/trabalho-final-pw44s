@@ -11,6 +11,7 @@ const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export const ProductDetailPage = () => {
+  // Guarda o produto carregado pelo id da URL.
   const [product, setProduct] = useState<IProduct>();
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
@@ -26,6 +27,7 @@ export const ProductDetailPage = () => {
         return;
       }
 
+      // Busca no backend o produto individual: GET /products/{id}.
       const response = await ProductService.findById(Number(id));
       if (response.success) {
         setProduct(response.data as IProduct);
@@ -45,6 +47,7 @@ export const ProductDetailPage = () => {
   }
 
   const handleAddProduct = () => {
+    // Produto so pode ir ao carrinho se o usuario estiver logado.
     if (!authenticated) {
       showToast({
         severity: "warn",
@@ -55,6 +58,7 @@ export const ProductDetailPage = () => {
       return;
     }
 
+    // Usa o CartContext para adicionar o produto atual.
     addProduct(product);
     showToast({
       severity: "success",

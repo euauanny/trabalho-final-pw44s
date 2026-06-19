@@ -24,6 +24,7 @@ import java.util.List;
 
 @EnableWebSecurity
 @Configuration
+// Define autenticacao, autorizacao, CORS, senha e filtros JWT da API.
 public class WebSecurity {
 
     // Service responsável por buscar um usuário no banco de dados por meio do método loadByUsername()
@@ -39,6 +40,7 @@ public class WebSecurity {
     @Bean
     @SneakyThrows
     public SecurityFilterChain filterChain(HttpSecurity http) {
+        // Configura o gerenciador de login para usar AuthService e BCrypt.
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder
@@ -68,6 +70,7 @@ public class WebSecurity {
                 //permite que a rota "/h2-console" seja acessada por qualquer requisição mesmo o usuário não estando autenticado
                 .requestMatchers("/h2-console/**").permitAll()
 
+                // O catalogo pode ser consultado sem login.
                 .requestMatchers("/products/**").permitAll()
                 .requestMatchers("/categories/**").permitAll()
                 //as demais rotas da aplicação só podem ser acessadas se o usuário estiver autenticado
@@ -87,6 +90,7 @@ public class WebSecurity {
     // Criação do objeto utilizado na criptografia da senha, ele é usado no UserService ao cadastrar um usuário e pelo authenticationManagerBean para autenticar um usuário no sistema.
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // BCrypt cria o hash no cadastro e verifica a senha no login.
         return new BCryptPasswordEncoder();
     }
 
@@ -96,6 +100,7 @@ public class WebSecurity {
     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+        // Permite que o frontend, executado em outra origem, acesse a API.
         CorsConfiguration configuration = new CorsConfiguration();
         // Lista das origens autorizadas, no nosso caso que iremos rodar a aplicação localmente o * poderia ser trocado
         // por: http://localhost:porta, em que :porta será a porta em que a aplicação cliente será executada

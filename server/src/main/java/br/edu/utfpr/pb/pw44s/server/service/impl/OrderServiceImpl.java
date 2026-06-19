@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+// Liga as operacoes de pedido ao OrderRepository.
 public class OrderServiceImpl extends CrudServiceImpl<Order, Long>
         implements IOrderService {
 
@@ -25,6 +26,7 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Long>
 
     @Override
     public List<Order> findByUserId(Long userId) {
+        // Retorna somente o historico pertencente ao usuario informado.
         return orderRepository.findByUserId(userId);
     }
 }

@@ -3,6 +3,7 @@ import { api } from "@/lib/axios";
 
 const findAll = async (): Promise<IResponse> => {
   try {
+    // Busca todas as categorias para montar o filtro da Home.
     const data = await api.get("/categories");
     return {
       status: 200,

@@ -24,6 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Getter @Setter
+// Entidade JPA que representa um item disponivel no catalogo.
 public class Product {
 
     @Id
@@ -41,6 +42,7 @@ public class Product {
     private BigDecimal price;
 
     @ManyToOne
+    // Varios produtos podem pertencer a uma mesma categoria.
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
@@ -49,6 +51,7 @@ public class Product {
 
     @Override
     public boolean equals(Object o) {
+        // A identidade de um produto persistido e definida por seu id.
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;

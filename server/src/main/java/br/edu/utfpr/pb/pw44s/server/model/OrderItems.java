@@ -17,6 +17,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
+// Entidade associativa que registra produto, quantidade e preco dentro de um pedido.
 public class OrderItems {
 
     @Id
@@ -24,13 +25,16 @@ public class OrderItems {
     private Long id;
 
     @ManyToOne
+    // Muitos itens pertencem ao mesmo pedido.
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
     @ManyToOne
+    // Muitos itens podem apontar para o mesmo produto do catalogo.
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 
+    // O preco e salvo no item para preservar o valor praticado no momento da compra.
     @NotNull
     private BigDecimal price;
 

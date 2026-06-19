@@ -6,6 +6,7 @@ export function Layout() {
     <>
       <TopMenu />
       <main className="page-shell">
+        {/* Outlet e onde o React Router renderiza a pagina correspondente a rota atual. */}
         <Outlet />
       </main>
     </>

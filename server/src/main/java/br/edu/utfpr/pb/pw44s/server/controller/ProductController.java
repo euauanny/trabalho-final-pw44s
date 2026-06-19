@@ -21,6 +21,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("products")
+// Oferece consulta publica de produtos e filtro por categoria.
 public class ProductController extends CrudController<Product, ProductDTO, Long> {
 
     private final ProductMapper productMapper;
@@ -49,6 +50,7 @@ public class ProductController extends CrudController<Product, ProductDTO, Long>
 
     @GetMapping(params = "categoryId")
     public ResponseEntity<java.util.List<ProductDTO>> findAllByCategory(@RequestParam Long categoryId) {
+        // Esta rota atende GET /products?categoryId=valor.
         java.util.List<Product> products = productService.findByCategoryId(categoryId);
         return ResponseEntity.ok(products.stream().map(this::toDto).collect(java.util.stream.Collectors.toList()));
     }
@@ -56,18 +58,21 @@ public class ProductController extends CrudController<Product, ProductDTO, Long>
     @Override
     @PostMapping
     public ResponseEntity<ProductDTO> create(@RequestBody @Valid ProductDTO entity) {
+        // O cadastro de produtos foi bloqueado nesta API.
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
 
     @Override
     @PutMapping("{id}")
     public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody @Valid ProductDTO entity) {
+        // Retorna 405 porque a alteracao de produtos nao esta disponivel.
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
 
     @Override
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        // Retorna 405 porque a exclusao de produtos nao esta disponivel.
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
 }

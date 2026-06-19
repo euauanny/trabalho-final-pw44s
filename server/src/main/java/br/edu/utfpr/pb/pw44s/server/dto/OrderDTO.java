@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
 import java.util.List;
-//lista os dados do pedido no get orders
+
+// Representa um pedido completo devolvido ao frontend.
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = CategoryMapper.class)
+// Converte produtos e delega a conversao da categoria ao CategoryMapper.
 public interface ProductMapper {
 
     ProductDTO toDto(Product entity);

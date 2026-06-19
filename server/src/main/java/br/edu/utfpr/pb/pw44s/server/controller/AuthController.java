@@ -12,6 +12,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("auth")
+// Retorna informacoes do usuario que esta autenticado pelo token JWT.
 public class AuthController {
 
     private final AuthService authService;
@@ -24,6 +25,7 @@ public class AuthController {
 
     @GetMapping("user-info")
     public UserDTO getUserInfo(Principal principal) {
+        // Principal contem o username identificado pelo Spring Security.
         String username = principal.getName();
         User user = (User) authService.loadUserByUsername(username);
         return userMapper.toDto(user);

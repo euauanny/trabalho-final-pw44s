@@ -3,6 +3,7 @@ package br.edu.utfpr.pb.pw44s.server.repository;
 import br.edu.utfpr.pb.pw44s.server.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+// Consultas derivadas usadas no login e na validacao de cadastro duplicado.
 public interface UserRepository extends JpaRepository<User, Long> {
 
     User findUserByUsername(String username);

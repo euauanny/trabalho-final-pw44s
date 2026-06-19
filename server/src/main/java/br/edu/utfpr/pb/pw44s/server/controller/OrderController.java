@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("orders")
+// Controla a consulta e a criacao dos pedidos do usuario autenticado.
 public class OrderController extends CrudController<Order, OrderDTO, Long> {
 
     private final OrderMapper orderMapper;
@@ -55,12 +56,14 @@ public class OrderController extends CrudController<Order, OrderDTO, Long> {
 
     @Override
     public ResponseEntity<List<OrderDTO>> findAll() {
+        // Cada usuario recebe somente o proprio historico de pedidos.
         long userId = getCurrentUserId();
         return ResponseEntity.ok(orderService.findByUserId(userId).stream().map(this::toDto).collect(Collectors.toList()));
     }
 
     @Override
     public ResponseEntity<OrderDTO> create(OrderDTO entity) {
+        // Define no backend o dono e a data do pedido.
         long userId = getCurrentUserId();
         entity.setUserId(userId);
         entity.setDate(LocalDateTime.now());
@@ -69,6 +72,7 @@ public class OrderController extends CrudController<Order, OrderDTO, Long> {
 
     @PostMapping("checkout")
     public ResponseEntity<OrderDTO> createCheckout(@RequestBody OrderCreateDTO createDTO) {
+        // Monta o pedido usando os produtos e precos atuais do banco.
         long userId = getCurrentUserId();
         Order order = new Order();
         order.setUserId(userId);
@@ -78,10 +82,12 @@ public class OrderController extends CrudController<Order, OrderDTO, Long> {
         java.math.BigDecimal total = java.math.BigDecimal.ZERO;
 
         if (createDTO.getItems() == null || createDTO.getItems().isEmpty()) {
+            // Um pedido vazio nao pode ser finalizado.
             return ResponseEntity.badRequest().build();
         }
 
         for (OrderItemCreateDTO it : createDTO.getItems()) {
+            // Valida cada item antes de consultar o produto.
             if (it.getProductId() == null || it.getQuantity() == null || it.getQuantity() <= 0) {
                 return ResponseEntity.badRequest().build();
             }
@@ -90,6 +96,7 @@ public class OrderController extends CrudController<Order, OrderDTO, Long> {
                 return ResponseEntity.badRequest().build();
             }
             OrderItems oi = OrderItems.builder()
+                    // O preco e copiado do produto para registrar o valor da compra.
                     .product(product)
                     .price(product.getPrice())
                     .quantity(it.getQuantity())
@@ -97,17 +104,20 @@ public class OrderController extends CrudController<Order, OrderDTO, Long> {
             oi.setOrder(order);
             items.add(oi);
 
+            // Soma preco x quantidade ao total geral do pedido.
             total = total.add(product.getPrice().multiply(new java.math.BigDecimal(it.getQuantity())));
         }
 
         order.setItems(items);
         order.setTotal(total);
 
+        // CascadeType.ALL tambem persiste os itens quando o pedido e salvo.
         Order saved = orderService.save(order);
         return ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(orderMapper.toDto(saved));
     }
 
     private long getCurrentUserId() {
+        // Recupera o usuario que foi autenticado pelo filtro JWT.
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         return user.getId();

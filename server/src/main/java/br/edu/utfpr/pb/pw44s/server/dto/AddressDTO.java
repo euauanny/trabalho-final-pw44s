@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+// Dados de endereco recebidos ou devolvidos pela API, separados da entidade JPA.
 public class AddressDTO {
 
     private Long id;

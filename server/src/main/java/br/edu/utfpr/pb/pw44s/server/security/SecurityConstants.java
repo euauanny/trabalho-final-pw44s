@@ -1,5 +1,6 @@
 package br.edu.utfpr.pb.pw44s.server.security;
 
+// Centraliza os valores usados para criar e ler os tokens JWT.
 public class SecurityConstants {
     public static final String SECRET = "utfpr"; // secret utilizado para gerar o token
     public static final long EXPIRATION_TIME = 86400000; // 1 dia = 60*60*24*1000

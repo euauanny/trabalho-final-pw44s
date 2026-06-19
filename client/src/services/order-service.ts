@@ -3,6 +3,7 @@ import { api } from "@/lib/axios";
 
 const findAll = async (): Promise<IResponse> => {
   try {
+    // Lista pedidos do usuario autenticado: GET /orders.
     const data = await api.get("/orders");
     return {
       status: 200,
@@ -22,6 +23,7 @@ const findAll = async (): Promise<IResponse> => {
 
 const checkout = async (payload: ICheckout): Promise<IResponse> => {
   try {
+    // Finaliza a compra enviando endereco e itens do carrinho: POST /orders/checkout.
     const data = await api.post("/orders/checkout", payload);
     return {
       status: 201,

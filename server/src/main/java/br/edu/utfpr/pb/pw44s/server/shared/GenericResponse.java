@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+// Resposta simples usada quando a API precisa devolver apenas uma mensagem.
 public class GenericResponse {
 
     private String message;

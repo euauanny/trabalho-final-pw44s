@@ -9,11 +9,13 @@ interface ViaCepResponse {
 }
 
 const findAddressByCep = async (cep: string): Promise<Partial<IAddress> | null> => {
+  // Remove caracteres nao numericos para enviar apenas os 8 digitos ao ViaCEP.
   const cleanCep = cep.replace(/\D/g, "");
   if (cleanCep.length !== 8) {
     return null;
   }
 
+  // Consulta API externa ViaCEP para preencher dados do endereco automaticamente.
   const response = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
   const data = (await response.json()) as ViaCepResponse;
 

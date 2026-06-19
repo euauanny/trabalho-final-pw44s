@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.edu.utfpr.pb.pw44s.server.model.OrderItems;
 
+// Disponibiliza as operacoes JPA para os itens de pedido.
 public interface OrderItemsRepository extends JpaRepository<OrderItems, Long> {
     
 }

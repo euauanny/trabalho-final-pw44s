@@ -16,6 +16,7 @@ const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export const HomePage = () => {
+  // Estados da tela: produtos, categorias, filtro, pagina atual e loading.
   const [products, setProducts] = useState<IProduct[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>();
@@ -29,6 +30,7 @@ export const HomePage = () => {
 
   useEffect(() => {
     const loadCategories = async () => {
+      // Carrega categorias do backend para alimentar o Dropdown de filtro.
       const response = await CategoryService.findAll();
       if (response.success && Array.isArray(response.data)) {
         setCategories(response.data as ICategory[]);
@@ -41,6 +43,7 @@ export const HomePage = () => {
   useEffect(() => {
     const loadProducts = async () => {
       setLoading(true);
+      // Carrega produtos do backend. Se houver categoria selecionada, busca com filtro.
       const response = await ProductService.findAll(selectedCategory);
       if (response.success && Array.isArray(response.data)) {
         setProducts(response.data as IProduct[]);
@@ -59,16 +62,19 @@ export const HomePage = () => {
   }, [selectedCategory]);
 
   const visibleProducts = useMemo(
+    // Recorta apenas os produtos da pagina atual.
     () => products.slice(first, first + pageSize),
     [first, products]
   );
 
+  // Opcoes exibidas no Dropdown de categorias.
   const categoryOptions = [
     { label: "Todas as categorias", value: undefined },
     ...categories.map((category) => ({ label: category.name, value: category.id })),
   ];
 
   const handleAddProduct = (product: IProduct) => {
+    // Regra de negocio: so usuario logado pode usar o carrinho.
     if (!authenticated) {
       showToast({
         severity: "warn",
@@ -79,6 +85,7 @@ export const HomePage = () => {
       return;
     }
 
+    // Se estiver logado, adiciona no CartContext e mostra feedback.
     addProduct(product);
     showToast({
       severity: "success",
@@ -119,9 +126,11 @@ export const HomePage = () => {
       ) : (
         <>
           <section className="product-grid">
+            {/* Renderiza um card para cada produto da pagina atual. */}
             {visibleProducts.map((product) => (
               <article className="product-card" key={product.id}>
                 <Link to={`/products/${product.id}`} className="product-image-link">
+                  {/* urlImage vem do backend e aponta para a pasta public/img do frontend. */}
                   <img
                     src={product.urlImage || "https://placehold.co/600x600/fce7f3/9f1239?text=Beauty"}
                     alt={product.name}

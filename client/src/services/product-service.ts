@@ -5,6 +5,7 @@ const productURL = "/products";
 
 const findAll = async (categoryId?: number): Promise<IResponse> => {
   try {
+    // Lista produtos. Se categoryId existir, envia como query param: /products?categoryId=...
     const data = await api.get(productURL, { params: categoryId ? { categoryId } : {} });
     return {
       status: 200,
@@ -24,6 +25,7 @@ const findAll = async (categoryId?: number): Promise<IResponse> => {
 
 const findById = async (id: number): Promise<IResponse> => {
   try {
+    // Busca um produto especifico pelo id: GET /products/{id}.
     const data = await api.get(`${productURL}/${id}`);
     return {
       status: 200,

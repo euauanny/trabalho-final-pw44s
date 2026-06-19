@@ -14,12 +14,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+// Intercepta excecoes dos controllers e cria respostas de erro consistentes.
 public class ExceptionHandlerAdvice {
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handlerValidationException(MethodArgumentNotValidException exception,
                                                HttpServletRequest request) {
+        // Reune os erros gerados por @NotNull, @Size, @Email e outras validacoes.
         BindingResult result = exception.getBindingResult();
         Map<String, String> validationErrors = new HashMap<>();
         for (FieldError fieldError : result.getFieldErrors()) {
@@ -34,6 +36,7 @@ public class ExceptionHandlerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handlerValidationException(IllegalStateException exception,
                                                HttpServletRequest request) {
+        // Trata regras de negocio, como username ou email ja cadastrado.
         return new ApiError(HttpStatus.BAD_REQUEST.value(), "Validation error!",
                 request.getServletPath(), null);
     }
@@ -42,6 +45,7 @@ public class ExceptionHandlerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handlerValidationException(HttpMessageNotReadableException exception,
                                                HttpServletRequest request) {
+        // Trata JSON ausente, malformado ou com tipos incompatveis.
         return new ApiError(HttpStatus.BAD_REQUEST.value(), "Validation error!",
                 request.getServletPath(), null);
     }

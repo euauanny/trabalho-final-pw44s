@@ -3,6 +3,7 @@ import { api } from "@/lib/axios";
 
 const signup = async (user: IUserRegister): Promise<IResponse> => {
   try {
+    // Cadastra novo usuario no backend: POST /users.
     const data = await api.post("/users", user);
     return {
       status: 200,
@@ -22,6 +23,7 @@ const signup = async (user: IUserRegister): Promise<IResponse> => {
 
 const login = async (user: IUserLogin): Promise<IResponse> => {
   try {
+    // Autentica usuario no backend: POST /login. A resposta traz token JWT e dados do usuario.
     const data = await api.post("/login", user);
     return {
       status: 200,

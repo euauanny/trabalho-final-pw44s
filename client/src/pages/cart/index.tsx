@@ -7,6 +7,7 @@ const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export const CartPage = () => {
+  // Dados e funcoes do carrinho vem do CartContext.
   const { cart, total, updateQuantity, removeProduct, clearCart } = useCart();
   const navigate = useNavigate();
 
@@ -35,6 +36,7 @@ export const CartPage = () => {
       ) : (
         <section className="cart-layout">
           <div className="cart-items">
+            {/* Cada item do carrinho renderiza imagem, nome, quantidade, subtotal e botao remover. */}
             {cart.map((item) => (
               <article className="cart-item" key={item.product.id}>
                 <img
@@ -46,6 +48,7 @@ export const CartPage = () => {
                   <span>{formatCurrency(item.product.price)}</span>
                 </div>
                 <div className="cart-quantity">
+                  {/* InputNumber do PrimeReact controla a quantidade do item. */}
                   <InputNumber
                     value={item.quantity}
                     min={1}
