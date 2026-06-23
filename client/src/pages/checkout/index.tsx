@@ -125,7 +125,6 @@ export const CheckoutPage = () => {
   };
 
   const addressOptions = addresses.map((address) => ({
-    // Dropdown precisa de label para exibir e value para salvar o id selecionado.
     label: `${address.logradouro}, ${address.numero} - ${address.bairro}`,
     value: address.id,
   }));
