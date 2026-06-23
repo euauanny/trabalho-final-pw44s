@@ -7,7 +7,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-// Contem as regras de negocio usadas no cadastro de usuario.
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -18,7 +17,6 @@ public class UserService {
     }
 
     public User save(User user) {
-        // Username e email sao unicos; a verificacao gera erro antes de salvar.
         if (this.userRepository.existsByUsername(user.getUsername())) {
             throw new IllegalStateException("Usuario ja cadastrado");
         }
@@ -27,7 +25,7 @@ public class UserService {
             throw new IllegalStateException("Email ja cadastrado");
         }
 
-        // A senha nunca e armazenada em texto puro.
+        // Protege a senha antes de salvar.
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return this.userRepository.save(user);
     }

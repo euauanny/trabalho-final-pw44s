@@ -11,7 +11,6 @@ import org.springframework.web.context.request.WebRequest;
 import java.util.Map;
 
 @RestController
-// Converte erros gerais encaminhados para /error em um ApiError padronizado.
 public class ErrorHandler implements ErrorController {
 
     private final ErrorAttributes errorAttributes;
@@ -22,7 +21,6 @@ public class ErrorHandler implements ErrorController {
 
     @RequestMapping("error")
     public ApiError handlerError(WebRequest webRequest, HttpServletResponse response) {
-        // O Spring fornece status, mensagem e caminho por meio de ErrorAttributes.
         Map<String, Object> attributes = errorAttributes.getErrorAttributes(webRequest,
                                             ErrorAttributeOptions.of(ErrorAttributeOptions.Include.MESSAGE));
 

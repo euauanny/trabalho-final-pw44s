@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-
-// Item detalhado devolvido na consulta do historico de pedidos.
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

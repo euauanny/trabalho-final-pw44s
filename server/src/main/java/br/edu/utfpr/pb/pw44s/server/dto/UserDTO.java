@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-// Dados de cadastro e informacoes publicas do usuario.
 public class UserDTO {
 
     @NotNull
@@ -26,7 +25,6 @@ public class UserDTO {
 
     @NotNull
     @Size(min = 6)
-    // A senha precisa conter minuscula, maiuscula e numero.
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
     private String password;
 

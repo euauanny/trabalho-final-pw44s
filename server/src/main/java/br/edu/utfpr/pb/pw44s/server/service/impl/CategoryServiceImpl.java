@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-// Liga o CRUD generico de categorias ao CategoryRepository.
 public class CategoryServiceImpl extends CrudServiceImpl<Category, Long>
         implements ICategoryService {
 

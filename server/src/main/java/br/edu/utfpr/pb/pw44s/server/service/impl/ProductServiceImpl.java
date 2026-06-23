@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-// Liga as operacoes de produto ao ProductRepository.
 public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
         implements IProductService {
 
@@ -25,7 +24,6 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
 
     @Override
     public List<Product> findByCategoryId(Long categoryId) {
-        // Delega ao Spring Data a consulta pelo id da categoria relacionada.
         return productRepository.findByCategory_Id(categoryId);
     }
 

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-// Representa uma permissao do Spring Security no JSON de resposta.
 public class AuthorityResponseDTO {
 
     private String authority;

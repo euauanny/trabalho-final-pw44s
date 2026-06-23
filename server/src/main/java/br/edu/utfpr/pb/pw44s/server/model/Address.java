@@ -15,15 +15,10 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-// Entidade JPA que representa um endereco armazenado em tb_address.
 public class Address {
-
-    // IDENTITY deixa o banco gerar um id numerico a cada insercao.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Guarda o dono do endereco sem expor essa escolha ao frontend.
     @NotNull
     private Long userId;
 

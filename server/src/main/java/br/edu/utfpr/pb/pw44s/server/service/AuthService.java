@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-// Adaptador entre o banco de usuarios e o mecanismo de login do Spring Security.
 public class AuthService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -19,7 +18,6 @@ public class AuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // O Spring chama este metodo tanto no login quanto na validacao do JWT.
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("Usuário não encontrado!");

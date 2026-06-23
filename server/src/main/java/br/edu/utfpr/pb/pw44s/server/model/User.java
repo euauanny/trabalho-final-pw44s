@@ -30,7 +30,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Getter @Setter
-// Entidade de usuario e implementacao exigida pelo Spring Security para autenticacao.
 public class User implements UserDetails {
 
     @Id
@@ -49,7 +48,6 @@ public class User implements UserDetails {
 
     @NotNull
     @Size(min = 6)
-    // Exige pelo menos uma minuscula, uma maiuscula e um numero.
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
     private String password;
 
@@ -61,7 +59,6 @@ public class User implements UserDetails {
     @Transient
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Todos os usuarios cadastrados recebem a permissao ROLE_USER.
         return AuthorityUtils.createAuthorityList("ROLE_USER");
     }
 
@@ -69,7 +66,6 @@ public class User implements UserDetails {
     @Transient
     @JsonIgnore
     public boolean isAccountNonExpired() {
-        // O sistema nao implementa expiracao de conta.
         return true;
     }
 
@@ -77,7 +73,6 @@ public class User implements UserDetails {
     @Transient
     @JsonIgnore
     public boolean isAccountNonLocked() {
-        // O sistema nao implementa bloqueio de conta.
         return true;
     }
 
@@ -85,7 +80,6 @@ public class User implements UserDetails {
     @Transient
     @JsonIgnore
     public boolean isCredentialsNonExpired() {
-        // O sistema nao implementa expiracao de senha.
         return true;
     }
 
@@ -93,7 +87,6 @@ public class User implements UserDetails {
     @Transient
     @JsonIgnore
     public boolean isEnabled() {
-        // Toda conta cadastrada fica habilitada imediatamente.
         return true;
     }
 

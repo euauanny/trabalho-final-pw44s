@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("categories")
-// Herda do CrudController as rotas padrao para categorias.
 public class CategoryController extends CrudController<Category, CategoryDTO, Long> {
 
     private final CategoryMapper categoryMapper;

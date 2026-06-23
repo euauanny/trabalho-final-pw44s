@@ -7,7 +7,6 @@ import org.springframework.data.domain.Sort;
 import java.io.Serializable;
 import java.util.List;
 
-// Contrato generico com as operacoes de persistencia compartilhadas pelas entidades.
 public interface ICrudService<T, ID extends Serializable> {
 
     List<T> findAll();

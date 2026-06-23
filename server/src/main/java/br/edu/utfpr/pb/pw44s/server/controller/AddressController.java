@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("addresses")
-// Disponibiliza as rotas de endereco e limita a listagem ao usuario autenticado.
 public class AddressController extends CrudController<Address, AddressDTO, Long> {
 
     private final AddressMapper addressMapper;
@@ -46,21 +45,20 @@ public class AddressController extends CrudController<Address, AddressDTO, Long>
 
     @Override
     public ResponseEntity<List<AddressDTO>> findAll() {
-        // Evita que um usuario veja os enderecos cadastrados por outro usuario.
+        // Mostra somente os enderecos do usuario atual.
         long userId = getCurrentUserId();
         return ResponseEntity.ok(addressService.findByUserId(userId).stream().map(this::toDto).collect(Collectors.toList()));
     }
 
     @Override
     public ResponseEntity<AddressDTO> create(AddressDTO entity) {
-        // O userId vem do token; o frontend nao escolhe o dono do endereco.
+        // O novo endereco pertence ao usuario atual.
         long userId = getCurrentUserId();
         entity.setUserId(userId);
         return super.create(entity);
     }
 
     private long getCurrentUserId() {
-        // O filtro JWT colocou o objeto User autenticado no SecurityContext.
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
         return user.getId();

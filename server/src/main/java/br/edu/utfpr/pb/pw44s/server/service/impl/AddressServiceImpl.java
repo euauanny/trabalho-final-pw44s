@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-// Liga as operacoes de endereco ao AddressRepository.
 public class AddressServiceImpl extends CrudServiceImpl<Address, Long>
         implements IAddressService {
 
@@ -26,7 +25,6 @@ public class AddressServiceImpl extends CrudServiceImpl<Address, Long>
 
     @Override
     public List<Address> findByUserId(Long userId) {
-        // Consulta usada para nao misturar enderecos de usuarios diferentes.
         return addressRepository.findByUserId(userId);
     }
 }

@@ -14,7 +14,6 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-// Versao segura do usuario retornada no login.
 public class UserResponseDTO {
 
     private String displayName;
@@ -22,7 +21,6 @@ public class UserResponseDTO {
     private Set<AuthorityResponseDTO> authorities;
 
     public UserResponseDTO(User user) {
-        // Copia somente os dados que o frontend precisa conhecer.
         this.displayName = user.getDisplayName();
         this.username = user.getUsername();
         this.authorities = new HashSet<>();

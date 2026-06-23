@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-// Formato de categoria exposto pelas rotas HTTP.
 public class CategoryDTO {
     private Long id;
 

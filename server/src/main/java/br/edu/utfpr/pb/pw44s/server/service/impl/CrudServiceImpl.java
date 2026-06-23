@@ -9,12 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
-
-// Implementa o CRUD uma unica vez e delega as operacoes ao JpaRepository correto.
 public abstract class CrudServiceImpl<T, ID extends Serializable>
         implements ICrudService<T, ID> {
-
-    // Cada service concreto devolve o repository de sua entidade.
     protected abstract JpaRepository<T, ID> getRepository();
 
     @Override
@@ -54,7 +50,6 @@ public abstract class CrudServiceImpl<T, ID extends Serializable>
 
     @Override
     public T findById(ID id) {
-        // Retorna null quando o id nao existe, em vez de expor Optional ao controller.
         return getRepository().findById(id).orElse(null);
     }
 
@@ -66,7 +61,6 @@ public abstract class CrudServiceImpl<T, ID extends Serializable>
     @Override
     @Transactional(readOnly = true)
     public long count() {
-        // readOnly indica que esta operacao apenas consulta o banco.
         return getRepository().count();
     }
 

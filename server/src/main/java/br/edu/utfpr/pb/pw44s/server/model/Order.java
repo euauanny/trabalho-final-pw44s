@@ -20,7 +20,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Getter @Setter
-// Entidade que representa um pedido completo realizado por um usuario.
 public class Order {
 
     @Id
@@ -32,15 +31,11 @@ public class Order {
 
     @NotNull
     private long userId;
-
-    // Copia o endereco usado na compra para preservar o historico do pedido.
+    // Mantem o endereco usado na compra.
     @NotNull
     private String deliveryAddress;
-    
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    // Salvar/excluir o pedido propaga a operacao para seus itens.
-    private java.util.List<OrderItems> items;
 
-    // Total calculado no checkout a partir dos precos registrados nos itens.
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<OrderItems> items;
     private java.math.BigDecimal total;
 }

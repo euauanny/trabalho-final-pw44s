@@ -13,7 +13,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Getter @Setter
-// Entidade JPA usada para agrupar os produtos do catalogo.
 public class Category {
 
     @Id
@@ -22,13 +21,11 @@ public class Category {
 
     @NotNull
     @Size(min = 2, max = 50)
-    // As validacoes tambem limitam o tamanho aceito pela API.
     @Column(length = 50, nullable = false)
     private String name;
 
     @Override
     public boolean equals(Object o) {
-        // Duas categorias persistidas sao consideradas iguais quando possuem o mesmo id.
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
